@@ -55,6 +55,9 @@ public:
 	*/
 	void CalculateCollision(void);
 
+	bool SeparationAxisHelper(const BoundingBoxClass* boxA, const BoundingBoxClass* boxB);
+
+
 private:
 	/* Constructor */
 	BoundingBoxManagerSingleton(void);

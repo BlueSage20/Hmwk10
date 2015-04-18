@@ -12,10 +12,13 @@ class BoundingBoxClass
 {
 	bool m_bInitialized; //Has the elements of this object been initialized before?
 	vector3 m_v3Centroid;//Center point of the model, the origin in GSpace in which the sphere is going to be located
+	
 	vector3 m_v3Min;//Collection of minimal components of the model
 	vector3 m_v3Max;//Collection of maximum componets of the model
+	
 	vector3 m_v3MinG;//Collection of minimal components of the model oriented in global space
 	vector3 m_v3MaxG;//Collection of maximum componets of the model oriented in global space
+	
 	vector3 m_v3Size;//Size of the Box
 	vector3 m_v3SizeAABB;//Size of the Box
 	String m_sName;//Name of the BoundingBox (to relate to the instance)

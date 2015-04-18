@@ -122,6 +122,120 @@ void BoundingBoxManagerSingleton::AddBoxToRenderList(String a_sInstanceName)
 	}
 }
 
+bool BoundingBoxManagerSingleton::SeparationAxisHelper(const BoundingBoxClass* boxA, const BoundingBoxClass* boxB)
+{
+	/* INFORMATION CODE FROM THE BOOK - PG 104 - IT DOESN'T PERFECTLY MATCH UP BUT IT'S A START? */
+	/* PLEASE SEE BOOK ONLY HALF OF THIS MAKES ANY SENSE TO ME */
+	/* Variables in book are partially translated: 
+		c = m_v3Centroid, 
+		t = trans,
+		AbsR = absR,
+		a = boxA,
+		b = boxB
+	
+	Variables in the book:
+		Point c, Vector u[3];, Vector e;
+		There's a vector sizeAABB in BoundingBoxClass, but we have no access to it
+		e is the 'positive halfwidth extents of OBB'; what do we use???
+	*/
+
+	float rA, rB;
+	matrix4 R, absR;
+
+	// Compute the rotation matrix
+	for (int i; i < 3; i++)
+		for(int j = 0; j < 3; j++)
+			//R[i][j] = Dot (boxA->u[i], boxB->u[j]);
+
+	// Compute translation vector
+	Vector trans = boxB->m_v3Centroid - boxA->m_v3Centroid;
+	// Bring translation into cooridinates of boxA
+	trans = Vector(Dot(trans, boxA->u[0]), Dot(trans, boxA->u[2]), Dot(trans, boxA->u[2]));
+
+	// Subexpressions ... cross product
+	for (int i = 0; i < 3; i++)
+		for (int j = 0; j < 3; j++)
+			//absR[i][j] = abs(R[i][j]) + EPSILON;
+
+	// Text Axes ...
+	for (int i = 0; i < 3; i++)
+	{
+		//rA = boxA->e[i];
+		//rB = boxB->e[0] * absR[i][0] + boxB->e[i] * absR[i][1] + boxB->e[2] * absR[i][2];
+		//if (abs(trans[i]) > rA + rB) return 0;
+	}
+
+	// Test Axes ...
+	for(int i = 0; i < 3; i++)
+	{
+		//rA = boxA->e[0] * absR[0][i] + boxA->e[i] * absR[1][i] + boxA->e[2] * absR[2][i];
+		//rB = boxB->e[i];
+		//if (abs(trans[0] * R[0][i] + trans[1] * R[1][i] + trans[2] * R[2][i]) > rA+rB) return 0;
+	}
+
+	// Test Axes...
+	for(int i = 0; i < 3; i++)
+	{
+		//rA = boxA->e[0] * absR[0][i] + boxA->3[1] * absR[1][i] + boxA->e[2] * absR[2][i];
+		//rB = boxB->e[i];
+		//if(abs(trans[0] * R[0][i] + trans[1] * R[1][i] + trans[2] * R[2][i]) > rA+rB) return 0;
+	}
+
+	// AXIS TESTING WITHOUT FOR LOOPS
+
+	// Test axis L = AO x BO
+	rA = boxA->e[1] * absR[2][0] + boxA->e[2] * absR[1][0];
+	rB = boxB->e[1] * absR[0][2] + boxB->e[2] * absR[0][1];
+	if(abs(trans[2] * R[1][0] - trans[1] * R[2][0]) > rA + rB) return 0;
+
+	// Test axis L = AO x B1
+	rA = boxA->e[1] * absR[2][1] + boxA->e[2] * absR[1][1];
+	rB = boxB->e[0] * absR[0][2] + boxB->e[2] * absR[0][1];
+	if(abs(trans[2] * R[1][1] - trans[1] * R[2][1]) > rA+rB) return 0;
+
+	// Test axis L = AO x B2
+	rA = boxA->e[1] * absR[2][2] + boxA->e[2] * absR[1][2];
+	rB = boxB->e[0] * absR[0][1] + boxB->e[1] * absR[0][0];
+	if(abs(trans[2] * R[1][2] - trans[1] * r[2][2]) > rA+rB) return 0;
+
+	// Test axis L - A1 x BO
+	rA = boxA->e[0] * absR[2][0] + boxA->e[2] * absR[0][0];
+	rB = boxB->e[1] * absR[1][2] + boxB->e[2] * absR[1][1];
+	if(abs(trans[0] * R[2][0] - trans[2] * R[0][0]) > rA+rB) return 0;
+
+	// Test axis L = A1 x B1
+	rA = boxA->e[0] * absR[2][1] + boxA->e[2] * absR[0][1];
+	rB = boxB->e[0] * absR[1][2] + boxB->e[2] * absR[1][0];
+	if(abs(trans[0] * R[2][1] - trans[2] * R[0][1]) > rA+rB) return 0;
+
+	// Test axis L = A1 x B2
+	rA = boxA->e[0] * absR[2][2] + boxA->e[2] * absR[0][2];
+	rB = boxB->e[0] * absR[1][1] + boxB->e[1] * absR[1][0];
+	if(abs(trans[0] * R[2][2] - trans[2] * R[0][2]) > rA+rB) return 0;
+
+	// Test axis L = A2 x B0
+	rA = boxA->e[0] * absR[1][0] + boxA->e[1] * absR[0][0];
+	rB = boxB->e[1] * absR[2][2] + boxB->e[2] * absR[2][1];
+	if(abs(trans[1] * R[0][0] - trans[0] * R[1][0]) > rA+rB) return 0;
+
+	// Test axis L = A2 x B1
+	rA = boxA->e[0] * absR[1][1] + boxA->e[1] * absR[0][1];
+	rB = boxB->e[0] * absR[2][2] + boxB->e[2] * absR[2][0];
+	if(abs(trans[1] * R[0][0] - trans[0] * R[1][0]) > rA+rB) return 0;
+
+	// Test axis L = A2 x B2
+	rA = boxA->e[0] * absR[1][1] + boxA->e[1] * absR[0][1];
+	rB = boxB->e[0] * abs[2][2] + box->e[2] * absR[2][0];
+	if(abs(trans[1] * R[0][1] - trans[0] * R[1][1]) > rA+rB) return 0;
+
+	// Since no separating axis is found, the OBBs must be intersecting
+	return 1;
+
+
+	return false;
+}
+
+
 void BoundingBoxManagerSingleton::CalculateCollision(void)
 {
 	//Create a placeholder for all center points
@@ -157,8 +271,12 @@ void BoundingBoxManagerSingleton::CalculateCollision(void)
 			else if(v1Max.z < v2Min.z || v1Min.z > v2Max.z)
 				bColliding = false;
 
-			if(bColliding)
-				m_lColor[i] = m_lColor[j] = MERED; //We make the Boxes red
+			if(bColliding) 
+			{
+				bool satResult = SeparationAxisHelper(m_lBox[i] ,m_lBox[j]);
+				if (satResult) 
+					m_lColor[i] = m_lColor[j] = MERED; //We make the Boxes red
+			}
 		}
 	}
 }
