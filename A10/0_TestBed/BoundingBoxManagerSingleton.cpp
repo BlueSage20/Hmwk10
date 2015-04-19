@@ -53,7 +53,8 @@ void BoundingBoxManagerSingleton::GenerateBoundingBox(matrix4 a_mModelToWorld, S
 	MeshManagerSingleton* pMeshMngr = MeshManagerSingleton::GetInstance();
 	//Verify the instance is loaded
 	if(pMeshMngr->IsInstanceCreated(a_sInstanceName))
-	{//if it is check if the Box has already been created
+	{
+		//if it is check if the Box has already been created
 		int nBox = IdentifyBox(a_sInstanceName);
 		if(nBox == -1)
 		{
@@ -148,9 +149,10 @@ bool BoundingBoxManagerSingleton::SeparationAxisHelper(const BoundingBoxClass* b
 			//R[i][j] = Dot (boxA->u[i], boxB->u[j]);
 
 	// Compute translation vector
-	Vector trans = boxB->m_v3Centroid - boxA->m_v3Centroid;
+	//vector3 trans = boxB->GetCentroid() - boxA->GetCentroid();// unreachable. Why?
 	// Bring translation into cooridinates of boxA
-	trans = Vector(Dot(trans, boxA->u[0]), Dot(trans, boxA->u[2]), Dot(trans, boxA->u[2]));
+	//vector3 transVec(glm::dot<vector3>(boxB->GetCentroid() - boxA->GetCentroid(), boxA->u[0]), glm::dot<vector3>(boxB->GetCentroid() - boxA->GetCentroid(), boxA->u[2]), glm::dot<vector3>(boxB->GetCentroid() - boxA->GetCentroid(), boxA->u[2])); //What is u???
+	
 
 	// Subexpressions ... cross product
 	for (int i = 0; i < 3; i++)
@@ -182,7 +184,7 @@ bool BoundingBoxManagerSingleton::SeparationAxisHelper(const BoundingBoxClass* b
 	}
 
 	// AXIS TESTING WITHOUT FOR LOOPS
-
+	/* WHAT IS e?
 	// Test axis L = AO x BO
 	rA = boxA->e[1] * absR[2][0] + boxA->e[2] * absR[1][0];
 	rB = boxB->e[1] * absR[0][2] + boxB->e[2] * absR[0][1];
@@ -227,9 +229,9 @@ bool BoundingBoxManagerSingleton::SeparationAxisHelper(const BoundingBoxClass* b
 	rA = boxA->e[0] * absR[1][1] + boxA->e[1] * absR[0][1];
 	rB = boxB->e[0] * abs[2][2] + box->e[2] * absR[2][0];
 	if(abs(trans[1] * R[0][1] - trans[0] * R[1][1]) > rA+rB) return 0;
-
+	*/
 	// Since no separating axis is found, the OBBs must be intersecting
-	return 1;
+	//return 1;
 
 
 	return false;

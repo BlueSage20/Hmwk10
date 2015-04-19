@@ -46,37 +46,37 @@ public:
 	GetMinimum
 		Returns the minimum vector
 	*/
-	vector3 GetMinimumOBB(void);
+	vector3 GetMinimumOBB(void)const;
 
 	/*
 	GetMaximum
 		Returns the maximum vector
 	*/
-	vector3 GetMaximumOBB(void);
+	vector3 GetMaximumOBB(void)const;
 
 	/*
 	GetMinimum
 		Returns the minimum vector
 	*/
-	vector3 GetMinimumAABB(void);
+	vector3 GetMinimumAABB(void)const;
 
 	/*
 	GetMaximum
 		Returns the maximum vector
 	*/
-	vector3 GetMaximumAABB(void);
+	vector3 GetMaximumAABB(void)const;
 
 	/*
 	GetCentroid
 		Returns the origin of the Cartesian Coordinate System in which the sphere is drawn in GSpace
 	*/
-	vector3 GetCentroid(void);
+	vector3 GetCentroid(void)const;
 
 	/*
 	GetName
 		Returns the name of the sphere to associate it with an instance
 	*/
-	String GetName(void);
+	String GetName(void)const;
 
 	/*
 	GenerateOrientedBoundingBox
